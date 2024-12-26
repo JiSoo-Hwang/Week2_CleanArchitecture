@@ -30,5 +30,11 @@ public class Application {
     @JoinColumn(name = "lectureId",nullable = false)
     private Lecture lecture;
 
-    private LocalDateTime appliedAt = LocalDateTime.now();
+    private LocalDateTime appliedAt;
+
+    public Application(User user, Lecture lecture){
+        this.user = user;
+        this.lecture = lecture;
+        this.appliedAt = LocalDateTime.now();
+    }
 }

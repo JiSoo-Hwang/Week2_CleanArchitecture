@@ -1,8 +1,12 @@
 package com.jsh.week2_lecture.application.service;
 
 import com.jsh.week2_lecture.application.dto.LectureDto;
+import com.jsh.week2_lecture.domain.entity.Application;
 import com.jsh.week2_lecture.domain.entity.Lecture;
+import com.jsh.week2_lecture.domain.entity.User;
+import com.jsh.week2_lecture.domain.repository.ApplicationRepository;
 import com.jsh.week2_lecture.domain.repository.LectureRepository;
+import com.jsh.week2_lecture.domain.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,15 +18,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class LectureServiceTest {
 
+    @InjectMocks
+    private LectureService lectureService;
+
     @Mock
     private LectureRepository lectureRepository;
 
-    @InjectMocks
-    private LectureService lectureService;
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private ApplicationRepository applicationRepository;
 
     @Test
     public void testFindAvailableLectures(){
@@ -65,4 +76,27 @@ public class LectureServiceTest {
         Assertions.assertEquals("클린 아키텍처", result.get(1).getLectureName());
     }
 
+    @Test
+    void applyLecture_Success(){
+        //Given
+        Long userId = 1L;
+        Long lectureId = 1L;
+
+        User mockUser = new User();
+        mockUser.setUserId(userId);
+
+        Lecture mockLecture = new Lecture();
+        mockLecture.setLectureId(lectureId);
+        mockLecture.setApplications(new ArrayList<>());
+
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        Mockito.when(lectureRepository.findById(lectureId)).thenReturn(Optional.of(mockLecture));
+        Mockito.when(applicationRepository.existsByUserAndLecture(mockUser,mockLecture)).thenReturn(false);
+
+        //When
+        lectureService.applyLecture(userId,lectureId);
+
+        //Then
+        Mockito.verify(applicationRepository).save(Mockito.any(Application.class));
+    }
 }

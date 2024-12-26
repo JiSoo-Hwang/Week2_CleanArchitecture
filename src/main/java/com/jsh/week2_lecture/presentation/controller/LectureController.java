@@ -15,17 +15,25 @@ import java.util.List;
 @RequestMapping("/api/lectures")
 public class LectureController {
 
+
     private final LectureFacade lectureFacade;
 
     public LectureController(LectureFacade lectureFacade) {
         this.lectureFacade = lectureFacade;
     }
 
-
     @GetMapping("/available")
     public ResponseEntity<List<LectureDto>> findAvailableLectures(@RequestParam("date") String date) {
         LocalDate localDate = LocalDate.parse(date);
         return ResponseEntity.ok(lectureFacade.findAvailableLectures(localDate));
+    }
+
+    @PostMapping("/{lectureId}/apply")
+    public ResponseEntity<Void>applyLecture(
+            @PathVariable Long lectureId,
+            @RequestHeader("userId") Long userId){
+        lectureFacade.applyLecture(userId, lectureId);
+        return ResponseEntity.ok().build();
     }
 
 }
