@@ -1,5 +1,6 @@
 package com.jsh.week2_lecture.application.service;
 
+import com.jsh.week2_lecture.application.dto.ApplicationDto;
 import com.jsh.week2_lecture.application.dto.LectureDto;
 import com.jsh.week2_lecture.domain.entity.Application;
 import com.jsh.week2_lecture.domain.entity.Lecture;
@@ -98,5 +99,28 @@ public class LectureServiceTest {
 
         //Then
         Mockito.verify(applicationRepository).save(Mockito.any(Application.class));
+    }
+
+    @Test
+    void testGetApplicationsByUserId(){
+        //Given
+        Long userId = 1L;
+        Long lectureId = 1L;
+        User mockUser = new User();
+        mockUser.setUserId(userId);
+        Lecture mockLecture = new Lecture();
+        mockLecture.setLectureId(lectureId);
+
+        Application application1 = new Application(mockUser,mockLecture);
+
+        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        Mockito.when(applicationRepository.findByUser(mockUser))
+                .thenReturn(List.of(application1));
+
+        //When
+        List<ApplicationDto>result = lectureService.getApplicationsByUserId(userId);
+
+        //Then
+        Assertions.assertEquals(1, result.size());
     }
 }

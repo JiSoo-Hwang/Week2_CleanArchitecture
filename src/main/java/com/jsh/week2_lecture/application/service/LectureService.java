@@ -1,5 +1,6 @@
 package com.jsh.week2_lecture.application.service;
 
+import com.jsh.week2_lecture.application.dto.ApplicationDto;
 import com.jsh.week2_lecture.application.dto.LectureDto;
 import com.jsh.week2_lecture.domain.entity.Application;
 import com.jsh.week2_lecture.domain.entity.Lecture;
@@ -67,4 +68,13 @@ public class LectureService {
         applicationRepository.save(application);
     }
 
+    public List<ApplicationDto> getApplicationsByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new LectureException(ErrorResponse.USER_NOT_FOUND));
+        List<Application>applications = applicationRepository.findByUser(user);
+
+        return applications.stream()
+                .map(ApplicationDto::fromEntity)
+                .toList();
+    }
 }

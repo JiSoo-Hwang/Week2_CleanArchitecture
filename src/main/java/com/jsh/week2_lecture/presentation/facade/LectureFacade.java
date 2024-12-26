@@ -1,5 +1,6 @@
 package com.jsh.week2_lecture.presentation.facade;
 
+import com.jsh.week2_lecture.application.dto.ApplicationDto;
 import com.jsh.week2_lecture.application.dto.LectureDto;
 import com.jsh.week2_lecture.application.service.LectureService;
 import org.springframework.stereotype.Component;
@@ -22,5 +23,9 @@ public class LectureFacade {
 
     public void applyLecture(Long userId, Long lectureId) {
         lectureService.applyLecture(userId,lectureId);
+    }
+
+    public List<ApplicationDto> getApplicationsByUserId(Long userId) {
+        return lectureService.getApplicationsByUserId(userId);
     }
 }

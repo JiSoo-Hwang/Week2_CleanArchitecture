@@ -1,5 +1,6 @@
 package com.jsh.week2_lecture.presentation.controller;
 
+import com.jsh.week2_lecture.application.dto.ApplicationDto;
 import com.jsh.week2_lecture.application.dto.LectureDto;
 import com.jsh.week2_lecture.domain.exception.LectureException;
 import com.jsh.week2_lecture.presentation.facade.LectureFacade;
@@ -36,4 +37,8 @@ public class LectureController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/applications")
+    public ResponseEntity<List<ApplicationDto>> getApplicationsByUserId(@RequestParam Long userId) {
+        return ResponseEntity.ok(lectureFacade.getApplicationsByUserId(userId));
+    }
 }
